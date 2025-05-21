@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EmprestimosBook.Controllers
 {
-    [Route("[controller]")]
+   
     public class EmprestimoController : Controller
     {
         private readonly ApplicationDbContext _db;

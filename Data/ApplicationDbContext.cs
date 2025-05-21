@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmprestimosBook.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmprestimosBook.Data
@@ -12,5 +13,8 @@ namespace EmprestimosBook.Data
         {
             
         }
+
+        public DbSet<EmprestimosModel> Emprestimos { get; set; }
+
     }
 }

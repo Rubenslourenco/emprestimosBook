@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EmprestimosBook.Controllers
 {
-   
+
     public class EmprestimoController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -25,6 +25,22 @@ namespace EmprestimosBook.Controllers
             return View(emprestimos);
         }
 
-       
+        public IActionResult Cadastrar()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Cadastrar(EmprestimosModel emprestimo)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Emprestimos.Add(emprestimo);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
     }
 }

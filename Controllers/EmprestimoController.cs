@@ -79,6 +79,7 @@ namespace EmprestimosBook.Controllers
         }
         [HttpPost]
         public IActionResult Editar(EmprestimosModel emprestimo)
+        
         {
             if (ModelState.IsValid)
             {
@@ -94,15 +95,18 @@ namespace EmprestimosBook.Controllers
         [HttpPost]
         public IActionResult Excluir(EmprestimosModel emprestimo)
         {
-            if (ModelState.IsValid)
+
+            if (emprestimo == null)
             {
-                _db.Emprestimos.Remove(emprestimo);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-
+                return NotFound();
             }
+            
+            _db.Emprestimos.Remove(emprestimo);
+            _db.SaveChanges();
 
-            return View(emprestimo);
+            return RedirectToAction("Index");
+
+         
         }
     }
 }

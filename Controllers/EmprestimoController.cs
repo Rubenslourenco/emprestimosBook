@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using EmprestimosBook.Data;
 using EmprestimosBook.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace EmprestimosBook.Controllers
 {

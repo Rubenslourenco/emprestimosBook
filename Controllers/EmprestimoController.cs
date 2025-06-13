@@ -19,6 +19,7 @@ namespace EmprestimosBook.Controllers
         {
             _db = db;
         }
+
         public IActionResult Index()
         {
             IEnumerable<EmprestimosModel> emprestimos = _db.Emprestimos;
@@ -28,6 +29,23 @@ namespace EmprestimosBook.Controllers
         public IActionResult Cadastrar()
         {
             return View();
+        }
+
+        public IActionResult Editar(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            EmprestimosModel emprestimo = _db.Emprestimos.FirstOrDefault(x => x.Id == id);
+
+            if (emprestimo == null)
+            {
+                return NotFound();
+            }
+
+            return View(emprestimo);
         }
 
         [HttpPost]
@@ -41,6 +59,19 @@ namespace EmprestimosBook.Controllers
             }
 
             return View();
+        }
+        [HttpPost]
+        public IActionResult Editar(EmprestimosModel emprestimo)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Emprestimos.Update(emprestimo);
+                _db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(emprestimo);
         }
     }
 }

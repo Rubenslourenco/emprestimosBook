@@ -1,4 +1,5 @@
 using System.Data;
+using ClosedXML.Excel;
 using EmprestimosBook.Data;
 using EmprestimosBook.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,18 @@ namespace EmprestimosBook.Controllers
 
         public IActionResult Exportar()
         {
-            return View();
+            var dados = GetDados();
+
+            using (XLWorkbook workbook = new XLWorkbook())
+            {
+                workbook.AddWorksheet(dados, "Dados empréstimos");
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.SaveAs(ms);
+                    return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Emprestimos.xls");
+                }
+            }  
         }
 
         private DataTable GetDados()

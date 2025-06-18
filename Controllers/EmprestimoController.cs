@@ -1,3 +1,4 @@
+using System.Data;
 using EmprestimosBook.Data;
 using EmprestimosBook.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,34 @@ namespace EmprestimosBook.Controllers
 
             return View(emprestimo);
         }
+
+        public IActionResult Exportar()
+        {
+            return View();
+        }
+
+        private DataTable GetDados()
+        {
+            DataTable dataTable = new DataTable();
+
+            dataTable.Columns.Add("Recebedor", typeof(string));
+            dataTable.Columns.Add("Fornecedor", typeof(string));
+            dataTable.Columns.Add("Livro", typeof(string));
+            dataTable.Columns.Add("Data emprestimo", typeof(DateTime));
+
+            var dados = _db.Emprestimos.ToList();
+
+            if (dados.Count > 0)
+            {
+                dados.ForEach(emprestimos =>
+                {
+                    dataTable.Rows.Add(emprestimos.Recebedor, emprestimos.Fornecedor, emprestimos.LivroEmprestado, emprestimos.DataUltimaAtualizacao);
+                });
+            }
+            
+            return dataTable;
+        }
+
 
         [HttpPost]
         public IActionResult Cadastrar(EmprestimosModel emprestimo)

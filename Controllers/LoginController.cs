@@ -11,6 +11,9 @@ namespace EmprestimosBook.Controllers
             return View();
         }
 
- 
+        public IActionResult Registrar()
+        {
+            return View();
+        }
     }
 }

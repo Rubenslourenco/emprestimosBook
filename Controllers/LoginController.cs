@@ -1,4 +1,5 @@
 using EmprestimosBook.Dto;
+using EmprestimosBook.Service.LoginService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmprestimosBook.Controllers
@@ -6,6 +7,12 @@ namespace EmprestimosBook.Controllers
  
     public class LoginController : Controller
     {
+
+        private readonly ILoginInterface _loginInterface;
+        public LoginController(ILoginInterface loginInterface)
+        {
+            _loginInterface = loginInterface;
+        }
 
         public IActionResult Index()
         {
@@ -19,9 +26,30 @@ namespace EmprestimosBook.Controllers
 
 
         [HttpPost]
-        public IActionResult Registrar(UsuarioRegisterDto usuarioRegisterDto)
+        public async Task<IActionResult> Registrar(UsuarioRegisterDto usuarioRegisterDto)
         {
-            return View(usuarioRegisterDto);
+            if (ModelState.IsValid)
+            {
+                var usuario = await _loginInterface.RegistrarUsuario(usuarioRegisterDto);
+
+                if (usuario.Status)
+                {
+                    TempData["MensagemSucesso"] = usuario.Mensagem;
+                }
+                else
+                {
+                    TempData["MessagemErro"] = usuario.Mensagem;
+                    return View(usuarioRegisterDto);
+
+                }
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View("usuarioRegisterDto");
+            }
+            
         }
     }
 }

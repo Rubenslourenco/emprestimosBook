@@ -4,16 +4,19 @@ using EmprestimosBook.Data;
 using EmprestimosBook.Dto;
 using EmprestimosBook.Models;
 using EmprestimosBook.Service.LoginService;
+using EmprestimosBook.Service.SenhaService;
 
 namespace EmprestimosBook.Services.LoginService
 {
     public class LoginService : ILoginInterface
     {
         private readonly ApplicationDbContext _context;
+        private readonly ISenhaInterface _senhaInterface;
 
-        public LoginService(ApplicationDbContext context)
+        public LoginService(ApplicationDbContext context, ISenhaInterface senhaInterface)
         {
             _context = context;
+            _senhaInterface = senhaInterface;
         }
 
 
@@ -24,12 +27,27 @@ namespace EmprestimosBook.Services.LoginService
             {
                 if (VerificarSeEmailExiste(usuarioRegisterDto))
                 {
-                    response.Mensagem = "Email de usuario já cadastrado"
+                    response.Mensagem = "Email de usuario já cadastrado";
                     response.Status = false;
                     return response;
                 }
-            
 
+                _senhaInterface.CriarSenhaHash(usuarioRegisterDto.Senha, out byte[] senhaHash, out byte[] senhaSalt);
+
+                var usuario = new UsuarioModel()
+                {
+                    Nome = usuarioRegisterDto.Nome,
+                    Sobrenome = usuarioRegisterDto.Sobrenome,
+                    Email = usuarioRegisterDto.Email,
+                    SenhaHash = senhaHash,
+                    SenhaSalt = senhaSalt
+                };
+
+                _context.Add(usuario);
+                await _context.SaveChangesAsync();
+
+                response.Mensagem = "Usuario cadastrado com sucesso";
+                return response;
             }
             catch (Exception ex)
             {
@@ -41,9 +59,10 @@ namespace EmprestimosBook.Services.LoginService
 
         private bool VerificarSeEmailExiste(UsuarioRegisterDto usuarioRegisterDto)
         {
-            var usuario = _context.Usuarios.FirstOrDefault(x => x.Email == usuarioRegisterDto.Email)
+            var usuario = _context.Usuarios.FirstOrDefault(x => x.Email == usuarioRegisterDto.Email);
 
-            if(usuario == null) {
+            if(usuario == null)
+            {
                 return false;
             }
 

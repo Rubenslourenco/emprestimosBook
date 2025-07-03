@@ -17,7 +17,7 @@ namespace EmprestimosBook.Dto
         public string Email { get; set; }
         [Required(ErrorMessage = "Digite a Senha")]
         public string Senha { get; set; }
-        [Required(ErrorMessage = "Confirma a Senha")]
+        [Required(ErrorMessage = "Confirma a Senha"), Compare("Senha", ErrorMessage = "As senha não estão iguais")]
         public string ConfirmarSenha { get; set; }
         
     }

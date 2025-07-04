@@ -38,7 +38,7 @@ namespace EmprestimosBook.Controllers
                 }
                 else
                 {
-                    TempData["MessagemErro"] = usuario.Mensagem;
+                    TempData["MenssagemErro"] = usuario.Mensagem;
                     return View(usuarioRegisterDto);
 
                 }
@@ -47,7 +47,7 @@ namespace EmprestimosBook.Controllers
             }
             else
             {
-                return View("usuarioRegisterDto");
+                return View(usuarioRegisterDto);
             }
             
         }
